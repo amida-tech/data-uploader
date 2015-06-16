@@ -1,7 +1,7 @@
 {
     "appName": {
-        "message": "DRE-Chrome",
-        "description": "The name of the application"
+        "message": "data-uploader",
+        "description": "data-uploader"
     },
     "appDescription": {
         "message": "Blue Button Record Retriever for DRE",
