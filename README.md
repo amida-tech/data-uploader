@@ -10,7 +10,7 @@ Installation
 Usage
 =================
 
-After installation, run grunt build to generate a package suitable for using in chrome.
+After installation, run `grunt build` to generate a package suitable for using in chrome.  Once the build is complete, you can add a package in the Chrome Extensions menu by selecting either the "dist" folder or the zipped package in the package folder.  You may need to turn on Developer mode in the Chrome Extensions Menu
 
 For debugging, use `grunt debug:server` which should open a page in chrome that you can use with livereloading
 
