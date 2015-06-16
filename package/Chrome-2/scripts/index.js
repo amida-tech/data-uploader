@@ -1,0 +1,1 @@
+"use strict";document.addEventListener("DOMContentLoaded",function(){var a=document.getElementsByTagName("h1");a.length>0&&(a[0].innerText=a[0].innerText+" 'Allo")},!1);

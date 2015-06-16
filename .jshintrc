@@ -1,0 +1,25 @@
+{
+    "bitwise": true,
+    "browser": false,
+    "camelcase": false,
+    "curly": true,
+    "eqeqeq": true,
+    "esnext": true,
+    "expr": true,
+    "immed": true,
+    "indent": 4,
+    "globals" : {
+        "chrome": true
+    }
+    "latedef": "nofunc",
+    "multistr": true,
+    "newcap": true,
+    "noarg": true,
+    "node": true,
+    "quotmark": false,
+    "regexp": true,
+    "smarttabs": true,
+    "trailing": true,
+    "undef": true,
+    "unused": false
+}
