@@ -1,0 +1,10 @@
+{
+    "appName": {
+        "message": "data-uploader",
+        "description": "data-uploader"
+    },
+    "appDescription": {
+        "message": "Blue Button Record Retriever for DRE",
+        "description": "The description of the application"
+    }
+}

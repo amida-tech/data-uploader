@@ -6,3 +6,9 @@ dist
 app/bower_components
 test/bower_components
 package
+OLD-ChromeApp/package
+OLD-ChromeApp/dist
+OLD-ChromeApp/.tmp
+OLD-ChromeApp/node_modules
+OLD-ChromeApp/app/bower_components
+OLD-ChromeApp/test/bower_components

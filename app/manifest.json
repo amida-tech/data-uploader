@@ -1,25 +1,39 @@
 {
-    "name": "__MSG_appName__",
-    "description": "__MSG_appDescription__",
-    "version": "27",
-    "manifest_version": 2,
-    "default_locale": "en",
-    "permissions": [
-        "<all_urls>",
-        "contextMenus",
-        "fileSystem",
-        "system.storage",
-        "storage"
-    ],
-    "icons": {
-        "16": "images/bb-logo-16.png",
-        "128": "images/bb-logo-128.png"
+  "name": "__MSG_appName__",
+  "version": "0.0.7",
+  "manifest_version": 2,
+  "description": "__MSG_appDescription__",
+  "icons": {
+    "16": "images/bb-logo-16.png",
+    "128": "images/bb-logo-128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "scripts/chromereload.js",
+      "scripts/background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "images/bb-logo-16.png",
+      "38": "images/bb-logo-128.png"
     },
-    "app": {
-        "background": {
-            "scripts": [
-                "scripts/main.js"
-            ]
-        }
+    "default_title": "data-uploader",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "scripts/contentscript.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
     }
+  ]
 }
