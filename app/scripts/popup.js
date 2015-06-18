@@ -2,113 +2,165 @@
 
 var dreChromeApp = angular.module('dreChromeApp', []);
 
-dreChromeApp.controller('dreCtrl', ['$scope', 'authentication', function ($scope, authentication) {
+dreChromeApp.controller('dreCtrl', ['$scope', 'dreBackend', function ($scope, dreBackend) {
+    $scope.selectedService = {};
+    $scope.dre = {
+        domain: 'http://localhost:3000'
+    };
+    $scope.tabStep = 0;
 
-	$scope.selectedService = {};
-    $scope.dre = {};
-	$scope.tabStep = 0;
-	$scope.services = [
-		{
-			name: 'My HealthEVet',
-			username: true,
-			password: true,
-			file: false
-		},
-		{
-			name: 'Centers for Medicare & Medicade Services',
-			username: true,
-			password: true,
-			file: false
-		},
-		{
-			name: 'Manual Upload',
-			username: false,
-			password: false,
-			file: true
-		}
-	];
+    $scope.files = [];
 
-	$scope.previousStep = function() {
-		$scope.tabStep--;
-	};
+    $scope.services = [
+        {
+            name: 'My HealthEVet',
+            username: true,
+            password: true,
+            file: false
+        },
+        {
+            name: 'Centers for Medicare & Medicade Services',
+            username: true,
+            password: true,
+            file: false
+        },
+        {
+            name: 'Manual Upload',
+            username: false,
+            password: false,
+            file: true
+        }
+    ];
+    $scope.$on("fileSelected", function (event, args) {
+        $scope.$apply(function () {
+            $scope.files = [args.file];
+        });
+    });
 
-	$scope.firstStep = function (selectService) {
-		$scope.selectedService = selectService;
-		$scope.tabStep=1;
-	};
-	$scope.secondStep = function() {
-        authentication.login($scope.dre.domain, $scope.dre.username, $scope.dre.password, function(err,data) {
-            if (err) {
-                console.log("err: ",err);
-            }
-            if (data) {
-                console.log("success? "+data);
-                $scope.tabStep = 2;
+    $scope.previousStep = function () {
+        $scope.tabStep--;
+    };
+
+    $scope.firstStep = function (selectService) {
+        $scope.selectedService = selectService;
+        $scope.tabStep = 1;
+    };
+    $scope.secondStep = function () {
+        /*
+         dreBackend.login($scope.dre.domain, $scope.dre.username, $scope.dre.password, function (err, data) {
+         if (err) {
+         console.log("err: ", err);
+         }
+         if (data) {
+         dreBackend.uploadRecord($scope.dre.domain, $scope.userFile, false, function(err2,results){
+         if(err2) {
+         $scope.uploadError = 'Upload Err: '+err2;
+         } else {
+         console.log(results);
+         $scope.tabStep = 2;
+         }
+         });
+         } else {
+         console.log("failed...");
+         }
+         });
+         */
+        dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.files[0], function (err2, results) {
+            if (err2) {
+                $scope.uploadError = 'Upload Err: ' + err2;
             } else {
-                console.log("failed...");
+                console.log(results);
+                $scope.tabStep = 2;
             }
         });
-	};
-}]).service('authentication', function authentication($rootScope, $location, $http) {
-        var auth_data = {};
-
-        function clearAuth() {
-            auth_data = {};
-            $rootScope.isAuthorized = false;
+    };
+}]).directive('fileModel', function () {
+    return {
+        scope: true,
+        link: function (scope, element) {
+            element.bind('change', function (event) {
+                scope.$emit("fileSelected", {file: event.target.files[0]});
+            });
         }
-        this.clearAuth = clearAuth;
+    };
+}).service('dreBackend', function authentication($http) {
 
-        this.authStatus = function (domain, callback) {
-            if (Object.keys(auth_data).length > 0) {
-                if (auth_data.authenticated) {
-                    callback(null, true);
-                } else {
-                    callback(null, false);
-                }
-            } else {
-                $http.get(domain+'/api/v1/account')
-                    .success(function (data) {
-                        if (data && data.authenticated) {
-                            auth_data.authenticated = true;
-                            callback(null, true);
-                        } else {
-                            auth_data.authenticated = false;
-                            callback(null, false);
-                        }
-
-                    }).error(function (err) {
-                        auth_data.authenticated = false;
-                        callback(err, false);
-                    });
+    /*
+     this.login = function (domain, username, password, callback) {
+     if (domain && username && password) {
+     $http.post(domain + '/api/v1/login', {
+     username: username,
+     password: password
+     })
+     .success(function () {
+     auth_data.authenticated = true;
+     callback(null, true);
+     })
+     .error(function () {
+     console.log("login failed");
+     auth_data.authenticated = false;
+     callback('Invalid Login and/or Password.', false);
+     });
+     }
+     };
+     */
+    this.uploadRecord = function (domain, username, password, file, callback) {
+        var uploadUrl = domain + "/api/v1/storage/extension";
+        //var fd = new FormData();
+        //var ff = document.getElementById('uploadFile').files[0];
+        //fd.append('file', ff);
+        //fd.append('file', file);
+        /*
+        $http.put(uploadUrl, {
+            username: username,
+            password: password,
+            file: file
+        }).success(function (data) {
+            callback(null, data);
+        })
+            .error(function (data) {
+                callback(data);
+            });
+*/
+        $http({
+            method: 'PUT',
+            url: uploadUrl,
+            headers: { 'Content-Type': undefined },
+            transformRequest: function (data) {
+                var formData = new FormData();
+                formData.append("username", data.username);
+                formData.append("password", data.password);
+                formData.append("file", data.file);
+                return formData;
+            },
+            //Create an object that contains the model and files which will be transformed
+            // in the above transformRequest method
+            data: {
+                username: username,
+                password: password,
+                file: file
             }
-        };
+        }).success(function (data) {
+            callback(null, data);
+        })
+            .error(function (data) {
+                callback(data);
+            });
 
-        this.login = function (domain, username, password, callback) {
-            if (domain && username && password) {
-                $http.post(domain+'/api/v1/login', {
-                        username: username,
-                        password: password
-                    })
-                    .success(function () {
-                        auth_data.authenticated = true;
-                        callback(null,true);
-                    })
-                    .error(function () {
-                        console.log("login failed");
-                        auth_data.authenticated = false;
-                        callback('Invalid Login and/or Password.',false);
-                    });
-            }
-        };
-
-        this.logout = function (domain, callback) {
-            $http.post(domain+'/api/v1/logout')
-                .success(function () {
-                    clearAuth();
-                    callback(null);
-                }).error(function (err) {
-                    console.log("logout failed");
-                    callback(err);
-                });
-        };
-    });
+        /*fd.append('file', file);
+         fd.append('check', check);
+         $http.put(uploadUrl, fd, {
+         transformRequest: angular.identity,
+         headers: {
+         'Content-Type': undefined
+         }
+         })
+         .success(function (data) {
+         callback(null, data);
+         })
+         .error(function (data) {
+         callback(data);
+         });
+         */
+    };
+});

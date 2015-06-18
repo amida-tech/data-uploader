@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.18",
+  "version": "0.0.31",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -14,6 +14,12 @@
       "scripts/background.js"
     ]
   },
+  "permissions": [
+    "*://localhost:*/*",
+    "contextMenus",
+    "system.storage",
+    "storage"
+  ],
   "browser_action": {
     "default_icon": {
       "18": "images/bb-logo-18.png",
@@ -22,7 +28,7 @@
     "default_title": "data-uploader",
     "default_popup": "popup.html"
   },
-  "options_page": "options.html",
+  "options_page": "popup.html",
   "content_scripts": [
     {
       "matches": [
