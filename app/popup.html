@@ -35,25 +35,20 @@
                     </div>
                     <br/>
                     <div class="well" ng-if="selectService.name">
-                            <div class="form-group" ng-if="selectService.username">
-                                <label for="inputUsername">Username</label>
-                                <input type="email" class="form-control" id="inputUsername" placeholder="Username for {{selectService.name}}">
-                            </div>
-                            <div class="form-group" ng-if="selectService.password">
-                                <label for="inputPassword">Password</label>
-                                <input type="password" class="form-control" id="inputPassword" placeholder="Password for {{selectService.name}}">
-                            </div>
-                            <div class="form-group" ng-if="selectService.file">
-                                <label for="uploadFile">Manual Upload</label>
-                                <input type="file" file-model id="uploadFile">
-                                <p class="help-block">Please upload your medical record here. Acceptable formats are:</p>
-                            </div>
-                            <!--<div class="checkbox">
-                                <label>
-                                    <input type="checkbox"> Remember This <a>(?)</a>
-                                </label>
-                            </div>-->
-                            <button type="submit" class="btn btn-default" ng-click="firstStep(selectService)">Next</button>
+                        <div class="form-group" ng-if="selectService.username">
+                            <label for="inputUsername">Username</label>
+                            <input type="text" class="form-control" id="inputUsername" ng-model="select.username" placeholder="Username for {{selectService.name}}">
+                        </div>
+                        <div class="form-group" ng-if="selectService.password">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" class="form-control" id="inputPassword" ng-model="select.password" placeholder="Password for {{selectService.name}}">
+                        </div>
+                        <div class="form-group" ng-if="selectService.file">
+                            <label for="uploadFile">Manual Upload</label>
+                            <input type="file" file-model id="uploadFile">
+                            <p class="help-block">Please upload your medical record here. Acceptable formats are:</p>
+                        </div>
+                        <button type="submit" class="btn btn-default" ng-click="firstStep(selectService)">Next</button>
                     </div>
                 </div>
                 <div class="inner cover" ng-if="tabStep == 1">
@@ -61,8 +56,8 @@
                         <p class="cover-p">Great! We've got your record, now we need to login to DRE</p>
                     </div>
                     <div class="row">
-                        <div class="col-xs-8 col-xs-offset-2">
-                            <button ng-hide="selectedService.file" class="btn btn-default btn-full">Click Here to Save To Your Computer</button>
+                        <div class="col-xs-8 col-xs-offset-2" ng-hide="selectedService.file">
+                            <a class="btn btn-default btn-full" download="{{ downloadFileName }}" ng-href="{{ downloadUrl }}">Click Here to Save {{ downloadFileName }}</a>
                         </div>
                     </div>
                     <br/>

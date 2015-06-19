@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.31",
+  "version": "0.0.63",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -16,6 +16,7 @@
   },
   "permissions": [
     "*://localhost:*/*",
+    "*://www.myhealth.va.gov:*/*",
     "contextMenus",
     "system.storage",
     "storage"
