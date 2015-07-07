@@ -98,7 +98,7 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
     this.uploadRecord = function (domain, username, password, file, callback) {
       var uploadUrl = domain + "/api/v1/storage/extension";
 
-      var xhr = new XMLHttpRequest();
+      //var xhr = new XMLHttpRequest();
       /*
       xhr.upload.onprogress = function(e) {
         $rootScope.$apply (function() {
@@ -114,8 +114,9 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
         });
       };
 */
+      /*
       xhr.onload = function(e) {
-        callback(null,xhr.responseText);
+       callback(null,"success");
       };
 
       xhr.upload.onerror = function(e) {
@@ -129,14 +130,12 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
       formData.append(file.name, file);
       xhr.open("PUT", uploadUrl);
       xhr.send(formData);
-
-      /*
+       */
 
       $http({
         method: 'PUT',
         url: uploadUrl,
         headers: {
-          'Content-Transfer-Encoding': 'binary',
           'Content-Type': undefined
         },
         transformRequest: function (data) {
@@ -159,8 +158,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
           callback(data);
         });
 
-        */
-
     };
 
     this.getVARecordId = function (username, password, callback) {
@@ -178,7 +175,7 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': authHeader
-        },
+        }
       }).success(function (data) {
         var re = /(?:reportId=)([0-9]{1,})/igm;
         var recordId = re.exec(data);
@@ -201,7 +198,7 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
         headers: {
           'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
           'Authorization': authHeader
-        },
+        }
       }).success(function (data) {
         var re = /(?:File Name:\s{1,})(.{1,})/igm;
         var filename = re.exec(data);
@@ -211,7 +208,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
         callback(null, blob);
       })
         .error(function (data) {
-          var blob = null;
           callback(data, null);
         });
     };
@@ -230,7 +226,7 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
       headers: {
         Accept: "application/pdf",
         Authorization: authHeader
-      },
+      }
     }).success(function (data) {
       var blob = new Blob([data], {type: "application/pdf"});
       blob.name = filename;
@@ -238,7 +234,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function($provide) {
       callback(null, blob);
     })
       .error(function (data) {
-        var blob = null;
         callback(data, null);
       });
   };
