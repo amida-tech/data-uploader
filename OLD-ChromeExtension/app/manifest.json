@@ -1,0 +1,33 @@
+{
+  "name": "__MSG_appName__",
+  "version": "0.0.76",
+  "manifest_version": 2,
+  "description": "__MSG_appDescription__",
+  "icons": {
+    "16": "images/bb-logo-16.png",
+    "128": "images/bb-logo-128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "scripts/chromereload.js",
+      "scripts/background.js"
+    ]
+  },
+  "permissions": [
+    "*://localhost:*/*",
+    "*://www.myhealth.va.gov:*/*",
+    "contextMenus",
+    "system.storage",
+    "storage"
+  ],
+  "browser_action": {
+    "default_icon": {
+      "18": "images/bb-logo-18.png",
+      "38": "images/bb-logo-38.png"
+    },
+    "default_title": "data-uploader",
+    "default_popup": "popup.html"
+  },
+  "options_page": "popup.html"
+}
