@@ -60,15 +60,37 @@
         <div class="row">
           <p class="cover-p">Great! We've got your record, now we need to login to DRE</p>
         </div>
-        <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
-          <div class="col-xs-12" ng-hide="selectedService.file">
-            <a class="btn btn-default btn-full" download="{{ asciiFileName }}" ng-href="{{ asciiUrl }}">Save {{ asciiFileName }}</a>
+        <div ng-show="asciiFileName">
+          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+            <div class="col-xs-12" ng-hide="selectedService.file">
+              <a class="btn btn-default btn-full" download="{{ asciiFileName }}" ng-href="{{ asciiUrl }}">Save {{
+                asciiFileName }}</a>
+            </div>
           </div>
+          <br ng-if="selectedService.name !== 'Manual Upload'"/>
         </div>
-        <br ng-if="selectedService.name !== 'Manual Upload'"/>
-        <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+        <div ng-show="pdfFileName">
+          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+            <div class="col-xs-12" ng-hide="selectedService.file">
+              <a class="btn btn-default btn-full" download="{{ pdfFileName }}" ng-href="{{ pdfUrl }}">Save {{
+                pdfFileName }}</a>
+            </div>
+          </div>
+          <br ng-if="selectedService.name !== 'Manual Upload'"/>
+        </div>
+        <div ng-show="xmlFileName">
+          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+            <div class="col-xs-12" ng-hide="selectedService.file">
+              <a class="btn btn-default btn-full" download="{{ xmlFileName }}" ng-href="{{ xmlUrl }}">Save {{
+                xmlFileName }}</a>
+            </div>
+          </div>
+          <br ng-if="selectedService.name !== 'Manual Upload'"/>
+        </div>
+        <div class="row" ng-if="selectedService.name !== 'Manual Upload'" ng-show="ccdPdfFileName">
           <div class="col-xs-12" ng-hide="selectedService.file">
-            <a class="btn btn-default btn-full" download="{{ pdfFileName }}" ng-href="{{ pdfUrl }}">Save {{ pdfFileName }}</a>
+            <a class="btn btn-default btn-full" download="{{ ccdPdfFileName }}" ng-href="{{ ccdPdfUrl }}">Save {{
+              ccdPdfFileName }}</a>
           </div>
         </div>
         <br/>
