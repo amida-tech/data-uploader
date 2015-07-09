@@ -7,6 +7,7 @@
   <!-- build:css(./app) styles/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css"/>
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css styles/main.css -->
@@ -25,110 +26,132 @@
           <p class="lead">A Date Uploader DRE Extension...</p>
         </div>
       </div>
-      <div class="inner cover" ng-if="tabStep == 0">
-        <div class="row">
-          <div class="col-xs-8 col-xs-offset-2">
-            <label class="cover-text">Which Provider Would You Like To Update?</label>
-            <select class="form-control" ng-model="selectService" ng-options="service.name for service in services">
-              <option></option>
-            </select>
-          </div>
-        </div>
-        <br/>
+      <div class="inner cover">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title" ng-if="tabStep===0">What Service Would You Like To Connect To?</h3>
 
-        <div class="well" ng-if="selectService.name">
-          <div class="form-group" ng-if="selectService.username">
-            <label for="inputUsername">Username</label>
-            <input type="text" class="form-control" id="inputUsername" ng-model="select.username"
-                   placeholder="Username for {{selectService.name}}">
-          </div>
-          <div class="form-group" ng-if="selectService.password">
-            <label for="inputPassword">Password</label>
-            <input type="password" class="form-control" id="inputPassword" ng-model="select.password"
-                   placeholder="Password for {{selectService.name}}">
-          </div>
-          <div class="form-group" ng-if="selectService.file">
-            <label for="uploadFile">Manual Upload</label>
-            <input type="file" file-model id="uploadFile">
+            <h3 class="panel-title" ng-if="tabStep===1">Downloading Health Records...</h3>
 
-            <p class="help-block">Please upload your medical record here. Acceptable formats are:</p>
+            <h3 class="panel-title" ng-if="tabStep===2">Login to DRE?</h3>
+
+            <h3 class="panel-title" ng-if="tabStep===3">Save and Upload Health Records</h3>
+
+            <h3 class="panel-title" ng-if="tabStep===4">Thanks! Go To DRE?</h3>
           </div>
-          <button type="submit" class="btn btn-default" ng-click="firstStep(selectService)">Next</button>
-        </div>
-      </div>
-      <div class="inner cover" ng-if="tabStep == 1">
-        <div class="row">
-          <p class="cover-p">Great! We've got your record, now we need to login to DRE</p>
-        </div>
-        <div ng-show="asciiFileName">
-          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
-            <div class="col-xs-12" ng-hide="selectedService.file">
-              <a class="btn btn-default btn-full" download="{{ asciiFileName }}" ng-href="{{ asciiUrl }}">Save {{
-                asciiFileName }}</a>
+          <div class="panel-body" ng-if="tabStep===0">
+            <div class="row">
+              <div class="col-xs-8 col-xs-offset-2">
+                <label>Which Provider Would You Like To Update?</label>
+                <select class="form-control" ng-model="select.service"
+                        ng-options="service.name for service in services">
+                  <option></option>
+                </select>
+              </div>
+            </div>
+            <br/>
+
+            <div class="well" ng-if="select.service.name">
+              <div class="form-group" ng-if="select.service.username">
+                <label for="inputUsername">Username</label>
+                <input type="text" class="form-control" id="inputUsername" ng-model="select.username"
+                       placeholder="Username for {{select.service.name}}">
+              </div>
+              <div class="form-group" ng-if="select.service.password">
+                <label for="inputPassword">Password</label>
+                <input type="password" class="form-control" id="inputPassword" ng-model="select.password"
+                       placeholder="Password for {{select.service.name}}">
+              </div>
+              <div class="form-group" ng-if="select.service.file">
+                <label for="uploadFile">Manual Upload</label>
+                <input type="file" file-model id="uploadFile">
+
+                <p class="help-block">Please upload your medical record here. Acceptable formats are: xml, pdf, txt</p>
+              </div>
             </div>
           </div>
-          <br ng-if="selectedService.name !== 'Manual Upload'"/>
-        </div>
-        <div ng-show="pdfFileName">
-          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
-            <div class="col-xs-12" ng-hide="selectedService.file">
-              <a class="btn btn-default btn-full" download="{{ pdfFileName }}" ng-href="{{ pdfUrl }}">Save {{
-                pdfFileName }}</a>
+          <div class="panel-body" ng-if="tabStep===1">
+            <div class="row">
+              <div class="col-sm-12">
+                <progressbar class="progress-striped active" max="100" value="progress"><b>{{progress}}%</b>
+                </progressbar>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="alert alert-info" role="alert"
+                     ng-repeat="progressAlert in progressAlerts track by $index | reverse">
+                  {{progressAlert}}
+                </div>
+              </div>
             </div>
           </div>
-          <br ng-if="selectedService.name !== 'Manual Upload'"/>
-        </div>
-        <div ng-show="xmlFileName">
-          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
-            <div class="col-xs-12" ng-hide="selectedService.file">
-              <a class="btn btn-default btn-full" download="{{ xmlFileName }}" ng-href="{{ xmlUrl }}">Save {{
-                xmlFileName }}</a>
+          <div class="panel-body" ng-if="tabStep===2">
+            <div class="well">
+              <div class="form-group">
+                <label for="dreDomain">DRE Location (dev)</label>
+                <input type="text" class="form-control" id="dreDomain" ng-model="dre.domain"
+                       placeholder="http://localhost:3000">
+              </div>
+              <div class="form-group">
+                <label for="dreUsername">Username</label>
+                <input type="text" class="form-control" id="dreUsername" ng-model="dre.username"
+                       placeholder="DRE Username">
+              </div>
+              <div class="form-group">
+                <label for="drePassword">Password</label>
+                <input type="password" class="form-control" id="drePassword" ng-model="dre.password"
+                       placeholder="DRE Password">
+              </div>
+              <button class="btn btn-default" ng-click="checkDRE()">Login</button>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="alert alert-danger" role="alert"
+                       ng-repeat="dreAlert in dreAlerts track by $index | reverse">
+                    {{dreAlert}}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <br ng-if="selectedService.name !== 'Manual Upload'"/>
-        </div>
-        <div class="row" ng-if="selectedService.name !== 'Manual Upload'" ng-show="ccdPdfFileName">
-          <div class="col-xs-12" ng-hide="selectedService.file">
-            <a class="btn btn-default btn-full" download="{{ ccdPdfFileName }}" ng-href="{{ ccdPdfUrl }}">Save {{
-              ccdPdfFileName }}</a>
+          <div class="panel-body" ng-if="tabStep===3">
+            <table class="table table-bordered table-hover table-responsive table-striped">
+              <thead>
+              <tr>
+                <th>File Name</th>
+                <th>Type</th>
+                <th>Save to Computer</th>
+                <th>Upload to DRE</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="fileButton in fileButtons">
+                <td>{{fileButton.filename}}</td>
+                <td>{{fileButton.filetype}}</td>
+                <td><a class="btn btn-default btn-full" download="{{ fileButton.filename }}"
+                       ng-href="{{ fileButton.url }}">Save</a></td>
+                <td><a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
+                       ng-disabled="fileButton.uploaded">Upload</a></td>
+              </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-        <br/>
+          <div class="panel-body" ng-if="tabStep===4">
 
-        <div class="well">
-          <div class="form-group">
-            <label for="dreDomain">DRE Location (dev)</label>
-            <input type="text" class="form-control" id="dreDomain" ng-model="dre.domain"
-                   placeholder="http://localhost:3000">
           </div>
-          <div class="form-group">
-            <label for="dreUsername">Username</label>
-            <input type="text" class="form-control" id="dreUsername" ng-model="dre.username" placeholder="DRE Username">
-          </div>
-          <div class="form-group">
-            <label for="drePassword">Password</label>
-            <input type="password" class="form-control" id="drePassword" ng-model="dre.password"
-                   placeholder="DRE Password">
-          </div>
-          <!--<div class="checkbox">
-              <label>
-                  <input type="checkbox"> Remember This <a>(?)</a>
-              </label>
-          </div>-->
-
-          <button class="btn btn-default" ng-click="secondStep()">Upload to DRE</button>
-          <div class="row" ng-show="uploadError">
-            <span>{{uploadError}}</span>
-          </div>
-        </div>
-      </div>
-      <div class="inner cover" ng-if="tabStep == 2">
-        <div class="row">
-          <p class="cover-p">Upload Complete</p>
-        </div>
-        <div class="row">
-          <div class="col-xs-8 col-xs-offset-2">
-            <button class="btn btn-default btn-full">Click Here to go to DRE</button>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-sm-12">
+                <button class="btn btn-danger col-sm-2" ng-if="tabStep>0" ng-click="reset()">RESET</button>
+                <button type="submit" class="btn btn-primary col-sm-2 pull-right" ng-if="tabStep===0"
+                        ng-disabled="!select.service.name" ng-click="serviceStep()">Next
+                </button>
+                <button class="btn btn-default col-sm-2 pull-right" ng-if="tabStep===2" ng-click="skipDRE()">Skip
+                </button>
+                <button class="btn btn-primary col-sm-2 pull-right" ng-if="tabStep===3" ng-click="finish()">Finish
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -148,7 +171,7 @@
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 

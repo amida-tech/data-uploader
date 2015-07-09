@@ -1,0 +1,161 @@
+<!doctype html>
+<html ng-app="dreChromeApp">
+
+<head>
+  <meta charset="utf-8">
+  <title>Data Uploader</title>
+  <!-- build:css(./app) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css"/>
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+
+<body ng-controller="dreCtrl">
+<div class="site-wrapper">
+  <div class="site-wrapper-inner">
+    <div class="cover-container">
+      <div class="masthead clearfix">
+        <div class="inner">
+          <h3 class="masthead-brand cover-text">DUDE!</h3>
+
+          <p class="lead">A Date Uploader DRE Extension...</p>
+        </div>
+      </div>
+      <div class="inner cover" ng-if="tabStep == 0">
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2">
+            <label class="cover-text">Which Provider Would You Like To Update?</label>
+            <select class="form-control" ng-model="selectService" ng-options="service.name for service in services">
+              <option></option>
+            </select>
+          </div>
+        </div>
+        <br/>
+
+        <div class="well" ng-if="selectService.name">
+          <div class="form-group" ng-if="selectService.username">
+            <label for="inputUsername">Username</label>
+            <input type="text" class="form-control" id="inputUsername" ng-model="select.username"
+                   placeholder="Username for {{selectService.name}}">
+          </div>
+          <div class="form-group" ng-if="selectService.password">
+            <label for="inputPassword">Password</label>
+            <input type="password" class="form-control" id="inputPassword" ng-model="select.password"
+                   placeholder="Password for {{selectService.name}}">
+          </div>
+          <div class="form-group" ng-if="selectService.file">
+            <label for="uploadFile">Manual Upload</label>
+            <input type="file" file-model id="uploadFile">
+
+            <p class="help-block">Please upload your medical record here. Acceptable formats are:</p>
+          </div>
+          <button type="submit" class="btn btn-default" ng-click="firstStep(selectService)">Next</button>
+        </div>
+      </div>
+      <div class="inner cover" ng-if="tabStep == 1">
+        <div class="row">
+          <p class="cover-p">Great! We've got your record, now we need to login to DRE</p>
+        </div>
+        <div ng-show="asciiFileName">
+          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+            <div class="col-xs-12" ng-hide="selectedService.file">
+              <a class="btn btn-default btn-full" download="{{ asciiFileName }}" ng-href="{{ asciiUrl }}">Save {{
+                asciiFileName }}</a>
+            </div>
+          </div>
+          <br ng-if="selectedService.name !== 'Manual Upload'"/>
+        </div>
+        <div ng-show="pdfFileName">
+          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+            <div class="col-xs-12" ng-hide="selectedService.file">
+              <a class="btn btn-default btn-full" download="{{ pdfFileName }}" ng-href="{{ pdfUrl }}">Save {{
+                pdfFileName }}</a>
+            </div>
+          </div>
+          <br ng-if="selectedService.name !== 'Manual Upload'"/>
+        </div>
+        <div ng-show="xmlFileName">
+          <div class="row" ng-if="selectedService.name !== 'Manual Upload'">
+            <div class="col-xs-12" ng-hide="selectedService.file">
+              <a class="btn btn-default btn-full" download="{{ xmlFileName }}" ng-href="{{ xmlUrl }}">Save {{
+                xmlFileName }}</a>
+            </div>
+          </div>
+          <br ng-if="selectedService.name !== 'Manual Upload'"/>
+        </div>
+        <div class="row" ng-if="selectedService.name !== 'Manual Upload'" ng-show="ccdPdfFileName">
+          <div class="col-xs-12" ng-hide="selectedService.file">
+            <a class="btn btn-default btn-full" download="{{ ccdPdfFileName }}" ng-href="{{ ccdPdfUrl }}">Save {{
+              ccdPdfFileName }}</a>
+          </div>
+        </div>
+        <br/>
+
+        <div class="well">
+          <div class="form-group">
+            <label for="dreDomain">DRE Location (dev)</label>
+            <input type="text" class="form-control" id="dreDomain" ng-model="dre.domain"
+                   placeholder="http://localhost:3000">
+          </div>
+          <div class="form-group">
+            <label for="dreUsername">Username</label>
+            <input type="text" class="form-control" id="dreUsername" ng-model="dre.username" placeholder="DRE Username">
+          </div>
+          <div class="form-group">
+            <label for="drePassword">Password</label>
+            <input type="password" class="form-control" id="drePassword" ng-model="dre.password"
+                   placeholder="DRE Password">
+          </div>
+          <!--<div class="checkbox">
+              <label>
+                  <input type="checkbox"> Remember This <a>(?)</a>
+              </label>
+          </div>-->
+
+          <button class="btn btn-default" ng-click="secondStep()">Upload to DRE</button>
+          <div class="row" ng-show="uploadError">
+            <span>{{uploadError}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="inner cover" ng-if="tabStep == 2">
+        <div class="row">
+          <p class="cover-p">Upload Complete</p>
+        </div>
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2">
+            <button class="btn btn-default btn-full">Click Here to go to DRE</button>
+          </div>
+        </div>
+      </div>
+      <div class="mastfoot">
+        <div class="inner cover-footer">
+          <p>DRE Blue Button Record Importer, by <a href="http://amida-tech.com">Amida Technology Solutions</a>.</p>
+
+          <p>“Blue Button, the slogan, ‘Download My Data,’ the Blue Button Logo, and the Blue Button Combined Logo are
+            registered service marks owned by the U.S. Department of Health and Human Services.”</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- build:js(./app) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js scripts/index.js -->
+<script src="scripts/index.js"></script>
+<!-- endbuild -->
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 
 "use strict";
 
-var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
+var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($provide) {
   // Prevent Angular from sniffing for the history API
   // since it's not supported in packaged apps.
   $provide.decorator('$window', function ($delegate) {
@@ -95,42 +95,36 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
     }
   };
 
+  this.checkDRELogin = function (domain, username, password, callback) {
+    var loginUrl = domain + "/api/v1/login";
+
+    $http({
+      method: 'PUT',
+      url: loginUrl,
+      headers: {
+        'Content-Type': undefined
+      },
+      transformRequest: function (data) {
+        var formData = new FormData();
+        formData.append("username", data.username);
+        formData.append("password", data.password);
+        return formData;
+      },
+      data: {
+        username: username,
+        password: password
+      }
+    }).success(function (data) {
+      callback(null, true);
+    })
+      .error(function (data) {
+        callback(data, false);
+      });
+
+  };
+
   this.uploadRecord = function (domain, username, password, file, callback) {
     var uploadUrl = domain + "/api/v1/storage/extension";
-
-    //var xhr = new XMLHttpRequest();
-    /*
-     xhr.upload.onprogress = function(e) {
-     $rootScope.$apply (function() {
-     var percentCompleted;
-     if (e.lengthComputable) {
-     percentCompleted = Math.round(e.loaded / e.total * 100);
-     if (progressCb) {
-     progressCb(percentCompleted);
-     } else if (deferred.notify) {
-     deferred.notify(percentCompleted);
-     }
-     }
-     });
-     };
-     */
-    /*
-     xhr.onload = function(e) {
-     callback(null,"success");
-     };
-
-     xhr.upload.onerror = function(e) {
-     var msg = xhr.responseText ? xhr.responseText : "An unknown error occurred posting to '" + uploadUrl + "'";
-     callback(msg);
-     };
-
-     var formData = new FormData();
-     formData.append("username", username);
-     formData.append("password", password);
-     formData.append(file.name, file);
-     xhr.open("PUT", uploadUrl);
-     xhr.send(formData);
-     */
 
     $http({
       method: 'PUT',
@@ -164,7 +158,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
     var d = new Date();
     var domainBase = "www.myhealth.va.gov/mhv-portal-web/mhv.portal";
     var domainInfo = "?_nfpb=true&_windowLabel=downloadData&downloadData_actionOverride=%2Fgov%2Fva%2Fmed%2Fmhv%2Fusermgmt%2FdownloadYourData%2FdownloadSelectionsReport&_pageLabel=downloadData&";
-    //var domainEnd = "downloadDatawlw-radio_button_group_key%3A%7BactionForm.pickDate%7D=downloadSelectedDateRanges&downloadDatawlw-select_key%3A%7BactionForm.fromDateMonth%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateMonth%7D=1&downloadDatawlw-select_key%3A%7BactionForm.fromDateDay%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateDay%7D=1&downloadDatawlw-select_key%3A%7BactionForm.fromDateYear%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateYear%7D=1895&downloadDatawlw-select_key%3A%7BactionForm.toDateMonth%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateMonth%7D="+ (d.getMonth()+1)+"&downloadDatawlw-select_key%3A%7BactionForm.toDateDay%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateDay%7D="+ d.getDate()+"&downloadDatawlw-select_key%3A%7BactionForm.toDateYear%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateYear%7D="+ d.getFullYear()+"&downloadDatawlw-radio_button_group_key%3A%7BactionForm.pickDataClasses%7D=downloadAllDataClasses&downloadDatawlw-checkbox_key%3A%7BactionForm.medications%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsandtests%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.seiallergies%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizations%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadings%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medicalevents%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.familyhealthhistory%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.militaryhealthhistory%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.treatmentfacilities%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthcareproviders%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthhistoryall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthhistoryall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.activityjournal%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodjournal%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodactivityall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodactivityall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.currentgoals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.completedgoals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.goalsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.goalsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.seidemographics%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthinsurance%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.demohealthall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.demohealthall%7D=on";
     var domainEnd = "downloadDatawlw-radio_button_group_key%3A%7BactionForm.pickDate%7D=downloadSelectedDateRanges&downloadDatawlw-select_key%3A%7BactionForm.fromDateMonth%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateMonth%7D=1&downloadDatawlw-select_key%3A%7BactionForm.fromDateDay%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateDay%7D=1&downloadDatawlw-select_key%3A%7BactionForm.fromDateYear%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateYear%7D=1895&downloadDatawlw-select_key%3A%7BactionForm.toDateMonth%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateMonth%7D=" + (d.getMonth() + 1) + "&downloadDatawlw-select_key%3A%7BactionForm.toDateDay%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateDay%7D=" + d.getDate() + "&downloadDatawlw-select_key%3A%7BactionForm.toDateYear%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateYear%7D=" + d.getFullYear() + "&downloadDatawlw-radio_button_group_key%3A%7BactionForm.pickDataClasses%7D=downloadAllDataClasses&downloadDatawlw-checkbox_key%3A%7BactionForm.futureappointments%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.pastappointments%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.appointmentsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.appointmentsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.prescriptions%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medications%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vachemlabs%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vapathology%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.varadiology%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vaekg%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsandtests%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vaproblemlist%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vaadmissionsanddischarges%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vaprogressnotes%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.wellness%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.wellnesshistoryall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.wellnesshistoryall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vaallergies%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.seiallergies%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.allergiesall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.allergiesall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vaimmunizations%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizations%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizationsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizationsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vavitals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadings%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadingsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadingsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.medicalevents%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.familyhealthhistory%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.militaryhealthhistory%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.treatmentfacilities%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthcareproviders%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthhistoryall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthhistoryall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.activityjournal%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodjournal%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodactivityall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodactivityall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.currentgoals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.completedgoals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.goalsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.goalsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vademographics%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.seidemographics%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthinsurance%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.demohealthall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.demohealthall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.dodmilitaryservice%7DOldValue=false";
     var domainUrl = "https://" + domainBase + domainInfo + domainEnd;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
@@ -289,7 +282,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
   };
 
   this.checkVAReportReady = function (username, password, callback) {
-    //https://www.myhealth.va.gov/mhv-portal-web/mhv.portal?_nfpb=true&_windowLabel=downloadData&downloadData_actionOverride=%2Fgov%2Fva%2Fmed%2Fmhv%2Fusermgmt%2FdownloadYourData%2FdownloadReport&_pageLabel=downloadData&operation=downloadHealthHistoryData
     var domainBase = "www.myhealth.va.gov/mhv-portal-web/mhv.portal";
     var domainEnd = "?_nfpb=true&_windowLabel=downloadData&downloadData_actionOverride=%2Fgov%2Fva%2Fmed%2Fmhv%2Fusermgmt%2FdownloadYourData%2FdownloadReport&_pageLabel=downloadData&operation=downloadHealthHistoryData";
     var domainUrl = "https://" + domainBase + domainEnd;
@@ -303,7 +295,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
         'Authorization': authHeader
       }
     }).success(function (data) {
-      console.log("data: ", data);
       var existRE = /(Your information update is complete.)/;
       var existCheck = existRE.exec(data);
       if (existCheck) {
@@ -322,7 +313,6 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
           //report not ready
           callback(null, true, false);
         }
-        //callback(null, false); //no report yet
       }
     })
       .error(function (data) {
@@ -332,14 +322,18 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
   };
 
 }).controller('dreCtrl', ['$scope', 'dreBackend', function ($scope, dreBackend) {
-  $scope.selectedService = {};
+  $scope.select = {};
   $scope.dre = {
     domain: 'http://localhost:3000'
   };
-  $scope.select = {};
   $scope.tabStep = 0;
+  $scope.progress = 0;
+  $scope.progressAlerts = [];
+  $scope.dreAlerts = [];
 
   $scope.manualFiles = {};
+  $scope.dreLoggedIn = false;
+  $scope.fileButtons = [];
 
   $scope.services = [
     {
@@ -361,9 +355,26 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
       file: true
     }
   ];
+
+  $scope.reset = function () {
+    $scope.selectService = {};
+    $scope.dre = {
+      domain: 'http://localhost:3000'
+    };
+    $scope.select = {};
+    $scope.tabStep = 0;
+    $scope.progress = 0;
+    $scope.progressAlerts = [];
+    $scope.dreAlerts = [];
+
+    $scope.manualFiles = {};
+    $scope.dreLoggedIn = false;
+    $scope.manualFile = null;
+    $scope.fileButtons = [];
+  };
+
   $scope.$on("fileSelected", function (event, args) {
     $scope.$apply(function () {
-      //$scope.files = [args.file];
       $scope.manualFile = args.file;
     });
   });
@@ -372,85 +383,171 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
     $scope.tabStep--;
   };
 
+  var reportRetrieved = false;
+  var checkInterval;
+
   function checkReport() {
-    dreBackend.checkVAReportReady($scope.select.username, $scope.select.password, function (err, premium, avail, requestDate, filename) {
-      if (err) {
-        console.log("err: " + err);
-      } else {
-        if (premium) {
-          if (avail) {
-            //requestDate and filename should be there
-            dreBackend.getVARecordCCD(requestDate, $scope.select.username, $scope.select.password, filename, function (err, xmlFile) {
-              if (err) {
-                console.log("err: ", err);
-              }
-              $scope.xmlFile = xmlFile;
-              $scope.xmlFileName = xmlFile.name;
-              $scope.xmlUrl = (window.URL || window.webkitURL).createObjectURL(xmlFile);
-              dreBackend.getVARecordCCDPDF(requestDate, $scope.select.username, $scope.select.password, filename, function (err, ccdPdfFile) {
+    console.log("checking for report");
+    if (!reportRetrieved) {
+      dreBackend.checkVAReportReady($scope.select.username, $scope.select.password, function (err, premium, avail, requestDate, filename) {
+        if (err) {
+          console.log("err: " + err);
+          $scope.progressAlerts.push('Error Checking for Advanced Report' + err);
+          ;
+        } else {
+          if (premium) {
+            if (avail) {
+              reportRetrieved = true;
+              //requestDate and filename should be there
+              dreBackend.getVARecordCCD(requestDate, $scope.select.username, $scope.select.password, filename, function (err, xmlFile) {
                 if (err) {
                   console.log("err: ", err);
+                } else {
+                  $scope.progress = $scope.progress + 20;
+                  $scope.progressAlerts.push('Retrieved CCD File');
+                  $scope.fileButtons.push({
+                    uploaded: false,
+                    filetype: 'ccd',
+                    file: xmlFile,
+                    filename: xmlFile.name,
+                    url: (window.URL || window.webkitURL).createObjectURL(xmlFile)
+                  });
+                  //$scope.xmlFile = xmlFile;
+                  //$scope.xmlFileName = xmlFile.name;
+                  //$scope.xmlUrl = (window.URL || window.webkitURL).createObjectURL(xmlFile);
+                  dreBackend.getVARecordCCDPDF(requestDate, $scope.select.username, $scope.select.password, filename, function (err, ccdPdfFile) {
+                    if (err) {
+                      console.log("err: ", err);
+                    } else {
+                      $scope.fileButtons.push({
+                        uploaded: false,
+                        filetype: 'ccdPdf',
+                        file: ccdPdfFile,
+                        filename: ccdPdfFile.name,
+                        url: (window.URL || window.webkitURL).createObjectURL(ccdPdfFile)
+                      });
+                      $scope.progress = $scope.progress + 20;
+                      $scope.progressAlerts.push('Retrieved Advanced PDF');
+                      //$scope.ccdPdfFile = ccdPdfFile;
+                      //$scope.ccdPdfFileName = ccdPdfFile.name;
+                      //$scope.ccdPdfUrl = (window.URL || window.webkitURL).createObjectURL(ccdPdfFile);
+                      setTimeout(function () {
+                        $scope.tabStep = 2;
+                      }, 5 * 1000);
+                    }
+                  });
                 }
-                $scope.ccdPdfFile = ccdPdfFile;
-                $scope.ccdPdfFileName = ccdPdfFile.name;
-                $scope.ccdPdfUrl = (window.URL || window.webkitURL).createObjectURL(ccdPdfFile);
               });
-            });
+            } else {
+              //report not available yet
+              $scope.progressAlerts.push('Report is not available yet.  Trying again in 30 seconds');
+            }
           } else {
-            //no report, setTimeout for 30 seconds and try again
-
+            //basic account
+            $scope.progress = $scope.progress + 40;
+            $scope.progressAlerts.push('Basic Account Detected');
+            setTimeout(function () {
+              $scope.tabStep = 2;
+            }, 5 * 1000);
           }
-        } else {
-          //basic account
         }
-      }
-    });
+      });
+    } else {
+      clearInterval(checkInterval);
+    }
   }
 
-  $scope.firstStep = function (selectService) {
-    $scope.selectedService = selectService;
-
-    if (selectService.name === "My HealtheVet") {
-      dreBackend.getVARecordId($scope.select.username, $scope.select.password, function (err, recordId) {
-        if (err) {
-          console.log(err);
-        }
+  function myHealtheVet() {
+    dreBackend.getVARecordId($scope.select.username, $scope.select.password, function (err, recordId) {
+      if (err) {
+        console.log(err);
+        $scope.progressAlerts.push('Error: ' + err);
+      } else {
+        $scope.progress = 20;
+        $scope.progressAlerts.push('Logged In to MyHealtheVet');
+        $scope.progressAlerts.push('Retrieved Report Id');
         $scope.reportId = recordId;
         dreBackend.getVARecordASCII(recordId, $scope.select.username, $scope.select.password, function (err, asciiFile) {
           if (err) {
             console.log(err);
+          } else {
+            $scope.progress = $scope.progress + 20;
+            $scope.progressAlerts.push('Retrieved Txt Record');
+            $scope.fileButtons.push({
+              uploaded: false,
+              filetype: 'ascii',
+              file: asciiFile,
+              filename: asciiFile.name,
+              url: (window.URL || window.webkitURL).createObjectURL(asciiFile)
+            });
+            //$scope.asciiFile = asciiFile;
+            //$scope.asciiFileName = asciiFile.name;
+            //$scope.asciiUrl = (window.URL || window.webkitURL).createObjectURL(asciiFile);
           }
-          $scope.asciiFile = asciiFile;
-          $scope.asciiFile = asciiFile;
-          $scope.asciiFileName = asciiFile.name;
-          $scope.asciiUrl = (window.URL || window.webkitURL).createObjectURL(asciiFile);
           dreBackend.getVARecordPDF(recordId, $scope.select.username, $scope.select.password, asciiFile.name, function (err, pdfFile) {
             if (err) {
               console.log(err);
+            } else {
+              $scope.progress = $scope.progress + 20;
+              $scope.progressAlerts.push('Retrieved Basic PDF');
+              $scope.fileButtons.push({
+                uploaded: false,
+                filetype: 'pdf',
+                file: pdfFile,
+                filename: pdfFile.name,
+                url: (window.URL || window.webkitURL).createObjectURL(pdfFile)
+              });
+              //$scope.pdfFile = pdfFile;
+              //$scope.pdfFileName = pdfFile.name;
+              //$scope.pdfUrl = (window.URL || window.webkitURL).createObjectURL(pdfFile);
             }
-            $scope.pdfFile = pdfFile;
-            $scope.pdfFile = pdfFile;
-            $scope.pdfFileName = pdfFile.name;
-            $scope.pdfUrl = (window.URL || window.webkitURL).createObjectURL(pdfFile);
-            $scope.tabStep = 1;
           });
         });
-      });
-      checkReport();
-    } else {
-      $scope.tabStep = 1;
-    }
+        reportRetrieved = false;
+        checkInterval = setInterval(checkReport(), 30 * 1000);
+      }
+    });
+  }
 
+  $scope.serviceStep = function () {
+    if ($scope.select.service.name === "My HealtheVet") {
+      myHealtheVet();
+      $scope.tabStep = 1; //1 is now progress screen
+    } else {
+      $scope.tabStep = 2; //2 is DRE Login Screen
+    }
   };
-  $scope.secondStep = function () {
-    if ($scope.selectedService.name === 'Manual Upload') {
-      dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.manualFile, function (err, manualResults) {
-        if (err) {
-          $scope.uploadError = 'Upload Err: ' + err;
+
+  $scope.skipDRE = function () {
+    $scope.tabStep = 3;
+  };
+
+  $scope.checkDRE = function () {
+    dreBackend.checkDRELogin($scope.dre.domain, $scope.dre.username, $scope.dre.password, function (err, validLogin) {
+      if (err) {
+        console.log("err: " + err);
+        $scope.dreAlerts.push('DRE Login Error: ' + err);
+      } else {
+        if (validLogin) {
+          $scope.dreAlerts.push('DRE Login Successful!');
+          $scope.dreLoggedIn = true;
+          setTimeout(function () {
+            $scope.tabStep = 3;
+          }, 5 * 1000);
         } else {
-          console.log('manual: ', manualResults);
-          $scope.tabStep = 2;
+          $scope.dreAlerts.push('DRE Login Error: ' + err);
         }
+      }
+    });
+    /*
+     if ($scope.selectedService.name === 'Manual Upload') {
+     dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.manualFile, function (err, manualResults) {
+     if (err) {
+     $scope.uploadError = 'Upload Err: ' + err;
+     } else {
+     console.log('manual: ', manualResults);
+     $scope.tabStep = 2;
+     }
       });
     } else {
       dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.pdfFile, function (err3, pdfResults) {
@@ -469,7 +566,23 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
         }
       });
     }
+     */
   };
+
+  $scope.uploadFile = function (fileButton) {
+    dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, fileButton.file, function (err, data) {
+      if (err) {
+        $scope.uploadError = 'Upload Err: ' + err;
+      } else {
+        //$scope.tabStep = 2;
+        fileButton.uploaded = true;
+      }
+    });
+  };
+
+  $scope.finish = function () {
+    $scope.tabStep = 4;
+  }
 }]).directive('fileModel', function () {
   return {
     scope: true,
@@ -479,5 +592,9 @@ var dreChromeApp = angular.module('dreChromeApp', [], function ($provide) {
         scope.$emit("fileSelected", {file: event.target.files[0]});
       });
     }
+  };
+}).filter('reverse', function () {
+  return function (items) {
+    return items.slice().reverse();
   };
 });
