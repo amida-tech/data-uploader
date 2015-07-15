@@ -4,7 +4,7 @@ Documentation for how to request data through HTTP Requests
 
 ### MyHealtheVet
 
-For MyHealtheVet there are 5 endpoints.
+For MyHealtheVet there are 4 endpoints.
 
 * Request Basic Report Id
 * Download Basic Report (PDF and ASCII)
