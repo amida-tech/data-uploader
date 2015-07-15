@@ -172,6 +172,8 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
     }).success(function (data) {
       var re = /(?:reportId=)([0-9]{1,})/igm;
       var recordId = re.exec(data);
+      console.log(recordId);
+      console.log(data);
       callback(null, recordId[1]);
     })
       .error(function (data) {
@@ -385,6 +387,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
 
   var reportRetrieved = false;
   var checkInterval;
+  var testcount = 0;
 
   function checkReport() {
     console.log("checking for report");
@@ -393,7 +396,6 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
         if (err) {
           console.log("err: " + err);
           $scope.progressAlerts.push('Error Checking for Advanced Report' + err);
-          ;
         } else {
           if (premium) {
             if (avail) {
@@ -431,9 +433,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
                       //$scope.ccdPdfFile = ccdPdfFile;
                       //$scope.ccdPdfFileName = ccdPdfFile.name;
                       //$scope.ccdPdfUrl = (window.URL || window.webkitURL).createObjectURL(ccdPdfFile);
-                      setTimeout(function () {
-                        $scope.tabStep = 2;
-                      }, 5 * 1000);
+                      $scope.tabStep = 2;
                     }
                   });
                 }
@@ -446,12 +446,18 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
             //basic account
             $scope.progress = $scope.progress + 40;
             $scope.progressAlerts.push('Basic Account Detected');
-            setTimeout(function () {
-              $scope.tabStep = 2;
-            }, 5 * 1000);
+            $scope.tabStep = 2;
           }
         }
       });
+      if (testcount >= 4) {
+        reportRetrieved = true;
+        $scope.progress = $scope.progress + 40;
+        $scope.progressAlerts.push('Basic Account Detected');
+        $scope.tabStep = 2;
+      } else {
+        testcount++;
+      }
     } else {
       clearInterval(checkInterval);
     }
@@ -504,7 +510,8 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
           });
         });
         reportRetrieved = false;
-        checkInterval = setInterval(checkReport(), 30 * 1000);
+        checkInterval = setInterval(checkReport, 30 * 1000);
+        checkReport();
       }
     });
   }
@@ -592,9 +599,5 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
         scope.$emit("fileSelected", {file: event.target.files[0]});
       });
     }
-  };
-}).filter('reverse', function () {
-  return function (items) {
-    return items.slice().reverse();
   };
 });

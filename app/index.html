@@ -80,7 +80,7 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="alert alert-info" role="alert"
-                     ng-repeat="progressAlert in progressAlerts track by $index | reverse">
+                     ng-repeat="progressAlert in progressAlerts track by $index">
                   {{progressAlert}}
                 </div>
               </div>
@@ -107,7 +107,7 @@
               <div class="row">
                 <div class="col-sm-12">
                   <div class="alert alert-danger" role="alert"
-                       ng-repeat="dreAlert in dreAlerts track by $index | reverse">
+                       ng-repeat="dreAlert in dreAlerts track by $index">
                     {{dreAlert}}
                   </div>
                 </div>
