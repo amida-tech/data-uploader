@@ -13,6 +13,15 @@ For MyHealtheVet there are 4 endpoints.
 
 MyHealtheVet uses Cookies for Authentication.  Once the appropriate cookie is acquired by the browser, they no longer check the Auth Header (at least, that's how it works with Chrome Apps)
 
+#### Auth Header
+POSTs should include an Authorization header:
+
+```
+Authorization: Basic XXXXXXXXXXXX
+```
+
+Where XXXXXXXXXXX is the Base64 encoded username + ":" + password
+
 #### VA Request Basic Report Id
 
 From the website, the HTTP request for this looks like for a basic account:
