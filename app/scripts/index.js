@@ -459,6 +459,13 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   $scope.$on("fileSelected", function (event, args) {
     $scope.$apply(function () {
       $scope.manualFile = args.file;
+      $scope.fileButtons = [{
+        uploaded: false,
+        filetype: 'Manual',
+        file: args.file,
+        filename: args.file.name,
+        url: (window.URL || window.webkitURL).createObjectURL(args.file)
+      }];
     });
   });
 
