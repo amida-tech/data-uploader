@@ -11,3 +11,13 @@ OLD-ChromeExtension/dist
 OLD-ChromeExtension/.tmp
 OLD-ChromeExtension/node_modules
 OLD-ChromeExtension/app/bower_components
+scrap.js
+documentation/CMS-1.md
+documentation/CMS-2-login-post.md
+documentation/CMS-3-login-redirect.md
+documentation/CMS-4-blue-button.md
+documentation/CMS-5-submit-request.md
+documentation/CMS-6-submit-redirect.md
+documentation/CMS-7-download-pdf.md
+documentation/CMS-8-download-txt.md
+documentation/CMS-notes.md

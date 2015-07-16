@@ -37,7 +37,7 @@
 
             <h3 class="panel-title" ng-if="tabStep===3">Save and Upload Health Records</h3>
 
-            <h3 class="panel-title" ng-if="tabStep===4">Thanks! Go To DRE?</h3>
+            <h3 class="panel-title" ng-if="tabStep===4">Thanks!</h3>
           </div>
           <div class="panel-body" ng-if="tabStep===0">
             <div class="row">
@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-          <div class="panel-body" ng-if="tabStep===2">
+          <!--<div class="panel-body" ng-if="tabStep===2">
             <div class="well">
               <div class="form-group">
                 <label for="dreDomain">DRE Location (dev)</label>
@@ -114,30 +114,62 @@
               </div>
             </div>
           </div>
+          -->
           <div class="panel-body" ng-if="tabStep===3">
-            <table class="table table-bordered table-hover table-responsive table-striped">
-              <thead>
-              <tr>
-                <th>File Name</th>
-                <th>Type</th>
-                <th>Save to Computer</th>
-                <th>Upload to DRE</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="fileButton in fileButtons">
-                <td>{{fileButton.filename}}</td>
-                <td>{{fileButton.filetype}}</td>
-                <td><a class="btn btn-default btn-full" download="{{ fileButton.filename }}"
-                       ng-href="{{ fileButton.url }}">Save</a></td>
-                <td><a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
-                       ng-disabled="fileButton.uploaded">Upload</a></td>
-              </tr>
-              </tbody>
-            </table>
+            <div class="well">
+              <div class="form-group">
+                <label for="dreDomain">DRE Location (dev)</label>
+                <input type="text" class="form-control" id="dreDomain" ng-model="dre.domain"
+                       placeholder="http://localhost:3000">
+              </div>
+              <div class="form-group">
+                <label for="dreUsername">Username</label>
+                <input type="text" class="form-control" id="dreUsername" ng-model="dre.username"
+                       placeholder="DRE Username">
+              </div>
+              <div class="form-group">
+                <label for="drePassword">Password</label>
+                <input type="password" class="form-control" id="drePassword" ng-model="dre.password"
+                       placeholder="DRE Password">
+              </div>
+            </div>
+            <div class="row">
+              <table class="table table-bordered table-hover table-responsive table-striped">
+                <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Type</th>
+                  <th>Save to Computer</th>
+                  <th colspan="2">Upload to DRE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="fileButton in fileButtons">
+                  <td>{{fileButton.filename}}</td>
+                  <td>{{fileButton.filetype}}</td>
+                  <td><a class="btn btn-default btn-full" download="{{ fileButton.filename }}"
+                         ng-href="{{ fileButton.url }}">Save</a></td>
+                  <td><a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)">Upload</a></td>
+                  <td><span ng-if="fileButton.uploaded">&#9989;</span></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="alert alert-danger" role="alert"
+                     ng-repeat="dreAlert in dreAlerts track by $index">
+                  {{dreAlert}}
+                </div>
+              </div>
+            </div>
           </div>
           <div class="panel-body" ng-if="tabStep===4">
-
+            <div class="row">
+              <div class="col-sm-12">
+                <button class="btn btn-full btn-primary" ng-href="dre.domain">Go to the DRE</button>
+              </div>
+            </div>
           </div>
           <div class="panel-footer">
             <div class="row">

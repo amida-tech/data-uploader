@@ -13,7 +13,11 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   function ($compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
   }]).service('dreBackend', function authentication($http) {
-
+  /*
+   var reViewstate = /(?:id="__VIEWSTATE" value=")(\S{1,})(?:")/;
+   var reViewstateGenerator = /(?:id="__VIEWSTATEGENERATOR" value=")(\S{1,})(?:")/;
+   var reEventvalidation = /(?:id="__EVENTVALIDATION" value=")(\S{1,})(?:")/;
+   */
   var Base64 = {
 
     keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -94,12 +98,12 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       return output;
     }
   };
-
+  /*
   this.checkDRELogin = function (domain, username, password, callback) {
     var loginUrl = domain + "/api/v1/login";
 
     $http({
-      method: 'PUT',
+   method: 'POST',
       url: loginUrl,
       headers: {
         'Content-Type': undefined
@@ -122,7 +126,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       });
 
   };
-
+   */
   this.uploadRecord = function (domain, username, password, file, callback) {
     var uploadUrl = domain + "/api/v1/storage/extension";
 
@@ -153,7 +157,56 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       });
 
   };
+  /*
+   this.getCMSInitial = function (callback) {
+   var d = new Date();
+   var domainBase = "mymedicare.gov/";
+   var domainUrl = "https://" + domainBase;
+   $http({
+   method: 'GET',
+   url: domainUrl,
+   headers: {
+   'Connection': 'Keep-Alive'
+   }
+   }).success(function (data) {
+   var vs1 = encodeURIComponent(reViewstate.exec(data));
+   //console.log("ViewState: "+vs1[1]);
+   var vsg1 = encodeURIComponent(reViewstateGenerator.exec(data));
+   //console.log("ViewState Generator: "+vsg1[1]);
+   var ev1 = encodeURIComponent(reEventvalidation.exec(data));
+   //console.log("Event Validation: "+ev1[1]);
+   callback(null, vs1, vsg1, ev1);
+   })
+   .error(function (data) {
+   console.log("was an error: ", data);
+   callback(data);
+   });
+   };
 
+   this.postCMSLogin = function (username, password, vs, vsg, ev, callback) {
+   var d = new Date();
+   var domainBase = "mymedicare.gov/default.aspx";
+   var domainInfo = '?__EVENTTARGET=ctl00%24ContentPlaceHolder1%24ctl00%24HomePage%24SignIn&__EVENTARGUMENT=&__VIEWSTATE='+vs+'&__VIEWSTATEGENERATOR='+vsg+'&__EVENTVALIDATION='+ev+'&Search_TextBox=&ctl00%24ContentPlaceHolder1%24ctl00%24HomePage%24confirmString=&ctl00%24ContentPlaceHolder1%24ctl00%24HomePage%24Agree=True&ctl00%24ContentPlaceHolder1%24ctl00%24HomePage%24isError=False&ctl00%24ContentPlaceHolder1%24ctl00%24HomePage%24SWEUserName='+username+'&ctl00%24ContentPlaceHolder1%24ctl00%24HomePage%24SWEPassword='+password+'&category_id=USCMS_C110&email=';
+   var domainUrl = "https://" + domainBase + domainInfo;
+   var authHeader = "Basic " + Base64.encode(username + ":" + password);
+   $http({
+   method: 'POST',
+   url: domainUrl,
+   //withCredentials: true,
+   headers: {
+   'Content-Type': 'application/x-www-form-urlencoded'//,
+   //'Authorization': authHeader
+   }
+   }).success(function (data) {
+   console.log(data);
+   callback(null, data);
+   })
+   .error(function (data) {
+   console.log("was an error: ", data);
+   callback(data);
+   });
+   };
+   */
   this.getVARecordId = function (username, password, callback) {
     var d = new Date();
     var domainBase = "www.myhealth.va.gov/mhv-portal-web/mhv.portal";
@@ -170,11 +223,15 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
         'Authorization': authHeader
       }
     }).success(function (data) {
-      var re = /(?:reportId=)([0-9]{1,})/igm;
-      var recordId = re.exec(data);
-      console.log(recordId);
-      console.log(data);
-      callback(null, recordId[1]);
+      if (data.indexOf("Request Rejected") > -1) {
+        callback("An unrecoverable error occured.  A browser restart is required.");
+      } else {
+        var re = /(?:reportId=)([0-9]{1,})/igm;
+        var recordId = re.exec(data);
+        console.log(recordId);
+        console.log(data);
+        callback(null, recordId[1]);
+      }
     })
       .error(function (data) {
         console.log("was an error: ", data);
@@ -337,19 +394,43 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   $scope.dreLoggedIn = false;
   $scope.fileButtons = [];
 
+  var addProgressAlert = function (alertText) {
+    var newAlerts = [alertText];
+    var alertLength = $scope.progressAlerts.length;
+    if (alertLength > 4) {
+      alertLength = 4;
+    }
+    for (var i = 0; i < alertLength; i++) {
+      newAlerts.push($scope.progressAlerts[i]);
+    }
+    $scope.progressAlerts = newAlerts;
+  };
+
+  var addDREAlert = function (alertText) {
+    var newAlerts = [alertText];
+    var alertLength = $scope.dreAlerts.length;
+    if (alertLength > 4) {
+      alertLength = 4;
+    }
+    for (var i = 0; i < alertLength; i++) {
+      newAlerts.push($scope.dreAlerts[i]);
+    }
+    $scope.dreAlerts = newAlerts;
+  };
+
   $scope.services = [
     {
       name: 'My HealtheVet',
       username: true,
       password: true,
       file: false
-    },
-    /*      {
+    }, /*
+     {
      name: 'Centers for Medicare & Medicade Services',
      username: true,
      password: true,
      file: false
-     }, */
+     },*/
     {
       name: 'Manual Upload',
       username: false,
@@ -395,7 +476,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       dreBackend.checkVAReportReady($scope.select.username, $scope.select.password, function (err, premium, avail, requestDate, filename) {
         if (err) {
           console.log("err: " + err);
-          $scope.progressAlerts.push('Error Checking for Advanced Report' + err);
+          addProgressAlert('Error Checking for Advanced Report ' + err);
         } else {
           if (premium) {
             if (avail) {
@@ -406,7 +487,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
                   console.log("err: ", err);
                 } else {
                   $scope.progress = $scope.progress + 20;
-                  $scope.progressAlerts.push('Retrieved CCD File');
+                  addProgressAlert('Retrieved CCD File');
                   $scope.fileButtons.push({
                     uploaded: false,
                     filetype: 'ccd',
@@ -429,32 +510,38 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
                         url: (window.URL || window.webkitURL).createObjectURL(ccdPdfFile)
                       });
                       $scope.progress = $scope.progress + 20;
-                      $scope.progressAlerts.push('Retrieved Advanced PDF');
+                      addProgressAlert('Retrieved Advanced PDF');
                       //$scope.ccdPdfFile = ccdPdfFile;
                       //$scope.ccdPdfFileName = ccdPdfFile.name;
                       //$scope.ccdPdfUrl = (window.URL || window.webkitURL).createObjectURL(ccdPdfFile);
-                      $scope.tabStep = 2;
+                      //$scope.tabStep = 2;
+                      $scope.tabStep = 3;
+                      clearInterval(checkInterval);
                     }
                   });
                 }
               });
             } else {
               //report not available yet
-              $scope.progressAlerts.push('Report is not available yet.  Trying again in 30 seconds');
+              addProgressAlert('Report is not available yet.  Trying again in 30 seconds');
             }
           } else {
             //basic account
             $scope.progress = $scope.progress + 40;
-            $scope.progressAlerts.push('Basic Account Detected');
-            $scope.tabStep = 2;
+            addProgressAlert('Basic Account Detected');
+            //$scope.tabStep = 2;
+            $scope.tabStep = 3;
+            clearInterval(checkInterval);
           }
         }
       });
       if (testcount >= 4) {
         reportRetrieved = true;
         $scope.progress = $scope.progress + 40;
-        $scope.progressAlerts.push('Basic Account Detected');
-        $scope.tabStep = 2;
+        addProgressAlert('Basic Account Detected');
+        //$scope.tabStep = 2;
+        $scope.tabStep = 3;
+        clearInterval(checkInterval);
       } else {
         testcount++;
       }
@@ -467,18 +554,18 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
     dreBackend.getVARecordId($scope.select.username, $scope.select.password, function (err, recordId) {
       if (err) {
         console.log(err);
-        $scope.progressAlerts.push('Error: ' + err);
+        addProgressAlert('Error: ' + err);
       } else {
         $scope.progress = 20;
-        $scope.progressAlerts.push('Logged In to MyHealtheVet');
-        $scope.progressAlerts.push('Retrieved Report Id');
+        addProgressAlert('Logged In to MyHealtheVet');
+        addProgressAlert('Retrieved Report Id');
         $scope.reportId = recordId;
         dreBackend.getVARecordASCII(recordId, $scope.select.username, $scope.select.password, function (err, asciiFile) {
           if (err) {
             console.log(err);
           } else {
             $scope.progress = $scope.progress + 20;
-            $scope.progressAlerts.push('Retrieved Txt Record');
+            addProgressAlert('Retrieved Txt Record');
             $scope.fileButtons.push({
               uploaded: false,
               filetype: 'ascii',
@@ -495,7 +582,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
               console.log(err);
             } else {
               $scope.progress = $scope.progress + 20;
-              $scope.progressAlerts.push('Retrieved Basic PDF');
+              addProgressAlert('Retrieved Basic PDF');
               $scope.fileButtons.push({
                 uploaded: false,
                 filetype: 'pdf',
@@ -516,12 +603,39 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
     });
   }
 
+  /*
+   function cmsFlow() {
+   dreBackend.getCMSInitial(function(err, vs1, vsg1, ev1){
+   if (err) {
+   console.log("err: "+err);
+   } else {
+   $scope.progressAlerts.push('Retrieved CMS Homepage');
+   dreBackend.postCMSLogin($scope.select.username, $scope.select.password, vs1, vsg1, ev1, function(err2, data2){
+   if (err2) {
+   console.log("err2: "+err2);
+   } else {
+   $scope.progressAlerts.push('Logged in to CMS!');
+   }
+   });
+   }
+
+   });
+   }
+   */
   $scope.serviceStep = function () {
     if ($scope.select.service.name === "My HealtheVet") {
       myHealtheVet();
       $scope.tabStep = 1; //1 is now progress screen
-    } else {
-      $scope.tabStep = 2; //2 is DRE Login Screen
+    }
+    /*
+     if ($scope.select.service.name === 'Centers for Medicare & Medicade Services') {
+     cmsFlow();
+     $scope.tabStep = 1; //1 is now progress screen
+     }
+     */
+    if ($scope.select.service.name === 'Manual Upload') {
+      //$scope.tabStep = 2; //2 is DRE Login Screen
+      $scope.tabStep = 3;
     }
   };
 
@@ -533,53 +647,23 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
     dreBackend.checkDRELogin($scope.dre.domain, $scope.dre.username, $scope.dre.password, function (err, validLogin) {
       if (err) {
         console.log("err: " + err);
-        $scope.dreAlerts.push('DRE Login Error: ' + err);
+        addDREAlert('DRE Login Error: ' + err);
       } else {
         if (validLogin) {
-          $scope.dreAlerts.push('DRE Login Successful!');
+          addDREAlert('DRE Login Successful!');
           $scope.dreLoggedIn = true;
-          setTimeout(function () {
-            $scope.tabStep = 3;
-          }, 5 * 1000);
+          $scope.tabStep = 3;
         } else {
           $scope.dreAlerts.push('DRE Login Error: ' + err);
         }
       }
     });
-    /*
-     if ($scope.selectedService.name === 'Manual Upload') {
-     dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.manualFile, function (err, manualResults) {
-     if (err) {
-     $scope.uploadError = 'Upload Err: ' + err;
-     } else {
-     console.log('manual: ', manualResults);
-     $scope.tabStep = 2;
-     }
-      });
-    } else {
-      dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.pdfFile, function (err3, pdfResults) {
-        if (err3) {
-          $scope.uploadError = 'Upload Err: ' + err3;
-        } else {
-          console.log('pdf: ', pdfResults);
-          dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, $scope.asciiFile, function (err2, asciiResults) {
-            if (err2) {
-              $scope.uploadError = 'Upload Err: ' + err2;
-            } else {
-              console.log('ascii: ', asciiResults);
-              $scope.tabStep = 2;
-            }
-          });
-        }
-      });
-    }
-     */
   };
 
   $scope.uploadFile = function (fileButton) {
     dreBackend.uploadRecord($scope.dre.domain, $scope.dre.username, $scope.dre.password, fileButton.file, function (err, data) {
       if (err) {
-        $scope.uploadError = 'Upload Err: ' + err;
+        addDREAlert('Upload Err: ' + err);
       } else {
         //$scope.tabStep = 2;
         fileButton.uploaded = true;
