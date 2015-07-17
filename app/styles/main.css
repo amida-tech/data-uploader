@@ -6,10 +6,10 @@
 a,
 a:focus,
 a:hover {
-  color: #fff;
+  /*color: #fff;*/
 }
 
-/* Custom default button */
+/* Button Stylings */
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
@@ -18,6 +18,23 @@ a:hover {
   background-color: #fff;
   border: 1px solid #fff;
 }
+.btn-danger, .btn-primary {
+	color: #d9534f;
+	background-color: transparent;
+	font-weight: bold;
+	border: 0px !important;
+	text-transform: uppercase;
+}
+.btn-danger {
+	color: #d9534f;
+}
+.btn-primary {
+	color: #337ab7;
+}
+.btn-primary:disabled {
+	background-color: transparent;
+}
+
 
 
 /*
@@ -27,16 +44,17 @@ a:hover {
 html,
 body {
   height: 100%;
-  background-color: #1E90FF;
+  background-color: #fff;
+  color: #4d4d4d;
 }
 .cover-p {
-  color: #fff;
+  /*color: #fff;*/
   text-align: center;
 }
 .cover-text {
   color: #fff;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  /*text-shadow: 0 1px 3px rgba(0,0,0,.5);*/
 }
 .cover-footer {
 	text-align: center;
@@ -45,14 +63,19 @@ body {
 	width: 100%;
 }
 
+.tablefix {
+	margin-left: 0;
+	margin-right: 0;
+}
+
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
   display: table;
   width: 100%;
   height: 100%; /* For at least Firefox */
   min-height: 100%;
-  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-          box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+  /*-webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+          box-shadow: inset 0 0 100px rgba(0,0,0,.5);*/
 }
 .site-wrapper-inner {
   display: table-cell;
@@ -63,18 +86,24 @@ body {
   margin-left: auto;
 }
 
-/* Padding for spacing */
+/* Padding for spacing 
 .inner {
   padding: 30px;
-}
+}*/
 
 
 /*
  * Header
  */
+.masthead {
+	background-color: #1E90FF;
+}
+.masthead .inner {
+padding: 8px 8px;
+}
 .masthead-brand {
   margin-top: 10px;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
 }
 
 .masthead-nav > li {
@@ -88,7 +117,7 @@ body {
   padding-left: 0;
   font-size: 16px;
   font-weight: bold;
-  color: #fff; /* IE8 proofing */
+  /*color: #fff*/; /* IE8 proofing */
   color: rgba(255,255,255,.75);
   border-bottom: 2px solid transparent;
 }
@@ -101,9 +130,10 @@ body {
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
-  color: #fff;
+  /*color: #fff*/;
   border-bottom-color: #fff;
 }
+
 
 @media (min-width: 768px) {
   .masthead-brand {
@@ -115,12 +145,29 @@ body {
 }
 
 
+
+/*
+ * Panel
+ */
+.panel, .panel-heading {
+	border-radius: 0 !important;
+	border: none!important;
+}
+.panel-footer{
+	top: 100vh;
+	position: fixed;
+	margin-top: -52px;
+	width: 100%;
+	z-index: 50;
+}
+
 /*
  * Cover
  */
 
 .cover {
-  padding: 0 20px;
+  /*padding: 0 20px;*/
+  padding: 0;
 }
 .cover .btn-lg {
   padding: 10px 20px;
@@ -131,10 +178,12 @@ body {
 /*
  * Footer
  */
-
 .mastfoot {
-  color: #999; /* IE8 proofing */
-  color: rgba(255,255,255,.5);
+/*  color: #fff; /* IE8 proofing *!/*/
+  /*color: rgba(255,255,255,.5);*/
+/*  top: 100vh;*/
+/*  position: absolute;*/
+  padding:24px 12px 55px 12px;
 }
 
 

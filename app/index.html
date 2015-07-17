@@ -22,18 +22,18 @@
       <div class="masthead clearfix">
         <div class="inner">
           <h3 class="masthead-brand cover-text">DUDE!</h3>
-
-          <p class="lead">A Date Uploader DRE Extension...</p>
+			
+         <!-- <p class="lead">A Data Uploader DRE Extension...</p>-->
         </div>
       </div>
       <div class="inner cover">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title" ng-if="tabStep===0">What Service Would You Like To Connect To?</h3>
+            <h3 class="panel-title" ng-if="tabStep===0">Connect to Service</h3>
 
             <h3 class="panel-title" ng-if="tabStep===1">Downloading Health Records...</h3>
 
-            <h3 class="panel-title" ng-if="tabStep===2">Login to DRE?</h3>
+            <h3 class="panel-title" ng-if="tabStep===2">Login to DRE</h3>
 
             <h3 class="panel-title" ng-if="tabStep===3">Save and Upload Health Records</h3>
 
@@ -42,7 +42,7 @@
           <div class="panel-body" ng-if="tabStep===0">
             <div class="row">
               <div class="col-xs-8 col-xs-offset-2">
-                <label>Which Provider Would You Like To Update?</label>
+                <label>Choose Provider:</label>
                 <select class="form-control" ng-model="select.service"
                         ng-options="service.name for service in services">
                   <option></option>
@@ -66,7 +66,7 @@
                 <label for="uploadFile">Manual Upload</label>
                 <input type="file" file-model id="uploadFile">
 
-                <p class="help-block">Please upload your medical record here. Acceptable formats are: xml, pdf, txt</p>
+                <p class="help-block">Upload your medical record here. Acceptable formats are: xml, pdf, txt</p>
               </div>
             </div>
           </div>
@@ -79,10 +79,26 @@
             </div>
             <div class="row">
               <div class="col-sm-12">
-                <div class="alert alert-info" role="alert"
-                     ng-repeat="progressAlert in progressAlerts track by $index">
-                  {{progressAlert}}
+<!--              <div class="alert alert-info" role="alert"
+                   ng-repeat="progressAlert in progressAlerts track by $index">
+                {{progressAlert}}
+              </div>-->
+                <div class="alert alert-info" role="alert">
+                  This is some content
                 </div>
+                <div class="alert alert-info" role="alert">
+                  This is some content
+                </div>
+                <div class="alert alert-info" role="alert">
+                  This is some content
+                </div>
+                <div class="alert alert-info" role="alert">
+                  This is some content
+                </div>
+                <div class="alert alert-info" role="alert">
+                  This is some content
+                </div>
+
               </div>
             </div>
           </div>
@@ -133,7 +149,7 @@
                        placeholder="DRE Password">
               </div>
             </div>
-            <div class="row">
+            <div class="row tablefix">
               <table class="table table-bordered table-hover table-responsive table-striped">
                 <thead>
                 <tr>
@@ -149,13 +165,19 @@
                   <td>{{fileButton.filetype}}</td>
                   <td><a class="btn btn-default btn-full" download="{{ fileButton.filename }}"
                          ng-href="{{ fileButton.url }}">Save</a></td>
-                  <td>
+                  <td ng-if="!fileButton.uploaded" colspan="2">
                     <a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
                        ng-if="dre.username.length > 0 && dre.password.length > 0">Upload</a>
                     <a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
                        ng-if="dre.username.length === 0 || dre.password.length === 0" ng-disabled="true">Upload</a>
                   </td>
-                  <td><span ng-if="fileButton.uploaded">&#9989;</span></td>
+                  <td ng-if="fileButton.uploaded">
+                    <a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
+                       ng-if="dre.username.length > 0 && dre.password.length > 0">Upload</a>
+                    <a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
+                       ng-if="dre.username.length === 0 || dre.password.length === 0" ng-disabled="true">Upload</a>
+                  </td>
+                  <td ng-if="fileButton.uploaded"><span ng-if="fileButton.uploaded">&#9989;</span></td>
                 </tr>
                 </tbody>
               </table>
