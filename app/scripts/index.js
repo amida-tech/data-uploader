@@ -383,7 +383,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
 }).controller('dreCtrl', ['$scope', 'dreBackend', function ($scope, dreBackend) {
   $scope.select = {};
   $scope.dre = {
-    domain: 'http://localhost:3000'
+    domain: 'http://dre.amida-demo.com:3000'
   };
   $scope.tabStep = 0;
   $scope.progress = 0;
@@ -442,7 +442,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   $scope.reset = function () {
     $scope.selectService = {};
     $scope.dre = {
-      domain: 'http://localhost:3000'
+      domain: 'http://dre.amida-demo.com:3000'
     };
     $scope.select = {};
     $scope.tabStep = 0;
@@ -468,6 +468,10 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       }];
     });
   });
+
+  $scope.closeWindow = function () {
+    window.close();
+  };
 
   $scope.previousStep = function () {
     $scope.tabStep--;

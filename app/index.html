@@ -117,11 +117,11 @@
           -->
           <div class="panel-body" ng-if="tabStep===3">
             <div class="well">
-              <div class="form-group">
+              <!--<div class="form-group">
                 <label for="dreDomain">DRE Location (dev)</label>
                 <input type="text" class="form-control" id="dreDomain" ng-model="dre.domain"
                        placeholder="http://localhost:3000">
-              </div>
+              </div>-->
               <div class="form-group">
                 <label for="dreUsername">Username</label>
                 <input type="text" class="form-control" id="dreUsername" ng-model="dre.username"
@@ -149,7 +149,12 @@
                   <td>{{fileButton.filetype}}</td>
                   <td><a class="btn btn-default btn-full" download="{{ fileButton.filename }}"
                          ng-href="{{ fileButton.url }}">Save</a></td>
-                  <td><a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)">Upload</a></td>
+                  <td>
+                    <a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
+                       ng-if="dre.username.length > 0 && dre.password.length > 0">Upload</a>
+                    <a class="btn btn-default btn-full" ng-click="uploadFile(fileButton)"
+                       ng-if="dre.username.length === 0 || dre.password.length === 0" ng-disabled="true">Upload</a>
+                  </td>
                   <td><span ng-if="fileButton.uploaded">&#9989;</span></td>
                 </tr>
                 </tbody>
@@ -164,13 +169,13 @@
               </div>
             </div>
           </div>
-          <div class="panel-body" ng-if="tabStep===4">
+          <!--<div class="panel-body" ng-if="tabStep===4">
             <div class="row">
               <div class="col-sm-12">
                 <button class="btn btn-full btn-primary" ng-href="dre.domain">Go to the DRE</button>
               </div>
             </div>
-          </div>
+          </div>-->
           <div class="panel-footer">
             <div class="row">
               <div class="col-sm-12">
@@ -180,8 +185,10 @@
                 </button>
                 <button class="btn btn-default col-sm-2 pull-right" ng-if="tabStep===2" ng-click="skipDRE()">Skip
                 </button>
-                <button class="btn btn-primary col-sm-2 pull-right" ng-if="tabStep===3" ng-click="finish()">Finish
+                <button class="btn btn-primary col-sm-2 pull-right" ng-if="tabStep===3" ng-click="windowClose()">Close
                 </button>
+                <!--<button class="btn btn-primary col-sm-2 pull-right" ng-if="tabStep===3" ng-click="finish()">Finish
+                </button>-->
               </div>
             </div>
           </div>
