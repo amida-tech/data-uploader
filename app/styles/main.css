@@ -98,6 +98,7 @@ body {
  */
 .masthead {
 	background-color: #1E90FF;
+	max-height: 66px;
 }
 .masthead .inner {
 padding: 8px 8px;
@@ -106,7 +107,12 @@ padding: 8px 8px;
   margin-top: 10px;
   /*margin-bottom: 10px;*/
 }
-
+svg {
+	transition: .5s ease-in-out;
+}
+svg:hover {
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
 .masthead-nav > li {
   display: inline-block;
 }
