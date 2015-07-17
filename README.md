@@ -10,6 +10,25 @@ For MyHealtheVet Premium accounts, the app will download a Blue Button ASCII fil
 
 Endpoints used to access MyHealtheVet are documented in the `documentation` folder.
 
+### Installation
+
+For installation, run the following:
+
+```
+npm install -g grunt-cli
+npm install
+bower install
+grunt build
+```
+
+The `grunt build` command will generate a `dist` folder which contains the built files.
+
+In google chrome, go to `chrome://extensions` to bring up the extensions manager.
+
+In the upper right corner of the window there will be a `Developer mode` checkbox.  Ensure that it is CHECKED
+
+Then click `Load unpacked extension...` and use that to open the `dist` folder.  You should now be able to launch the app in chrome.
+
 ### Future Improvements
 
 Add CMS support
