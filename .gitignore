@@ -12,3 +12,4 @@ OLD-ChromeExtension/.tmp
 OLD-ChromeExtension/node_modules
 OLD-ChromeExtension/app/bower_components
 scrap.js
+app/manifest.json
