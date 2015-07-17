@@ -158,3 +158,12 @@ Set-Cookie: <<REMOVED>>
 ```
 
 with the file attached.
+
+
+### CMS
+
+CMS currently does not work.  The header response for CMS includes a `'x-frame-options': 'SAMEORIGIN',` which prevents the Chrome App from storing a cookie or receiving proper responses.
+
+Flow notes are in CMS-notes.md
+
+All of the endpoints are documented in CMS-1 through CMS-8.
