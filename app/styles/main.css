@@ -14,9 +14,10 @@ a:hover {
 .btn-default:hover,
 .btn-default:focus {
   color: #1E90FF;
+  font-weight: bold;
   text-shadow: none; /* Prevent inheritence from `body` */
-  background-color: #fff;
-  border: 1px solid #fff;
+  background-color: transparent;
+  border: none;
 }
 .btn-danger, .btn-primary {
 	color: #d9534f;
@@ -152,6 +153,9 @@ padding: 8px 8px;
 .panel, .panel-heading {
 	border-radius: 0 !important;
 	border: none!important;
+}
+.panel-heading {
+	background-color: #006ad0!important;
 }
 .panel-footer{
 	top: 100vh;
