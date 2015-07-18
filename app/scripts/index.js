@@ -383,7 +383,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
 }).controller('dreCtrl', ['$scope', 'dreBackend', function ($scope, dreBackend) {
   $scope.select = {};
   $scope.dre = {
-    domain: 'http://localhost:3000'
+    domain: 'http://localhost:3000',
+    username: "",
+    password: ""
   };
   $scope.tabStep = 0;
   $scope.progress = 0;
@@ -442,7 +444,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   $scope.reset = function () {
     $scope.selectService = {};
     $scope.dre = {
-      domain: 'http://localhost:3000'
+      domain: 'http://localhost:3000',
+      username: "",
+      password: ""
     };
     $scope.select = {};
     $scope.tabStep = 0;
@@ -469,7 +473,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
     });
   });
 
-  $scope.closeWindow = function () {
+  $scope.windowClose = function () {
     window.close();
   };
 

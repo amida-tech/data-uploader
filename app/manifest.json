@@ -1,7 +1,7 @@
 {
   "name": "__MSG_appName__",
   "description": "__MSG_appDescription__",
-  "version": "120",
+  "version": "123",
   "manifest_version": 2,
   "default_locale": "en",
   "permissions": [
@@ -21,5 +21,5 @@
         "scripts/main.js"
       ]
     }
-  }
+    }
 }
