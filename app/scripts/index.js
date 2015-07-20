@@ -240,7 +240,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   };
   this.getVARecordASCII = function (recordId, username, password, callback) {
     var domainBase = "www.myhealth.va.gov/mhv-portal-web/downloadData";
-    var domainInfo = "?reportId=" + recordId + "&downloadFormat=bbFormat";
+    var domainInfo = "?reportId=" + recordId + "&downloadFormat=textFormat";
     var domainUrl = "https://" + domainBase + domainInfo;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     $http({
