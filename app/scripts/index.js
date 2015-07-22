@@ -2,6 +2,8 @@
 
 "use strict";
 
+var baseDomain = 'http://localhost:3000/'; //https://www.myhealth.va.gov/
+
 var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($provide) {
   // Prevent Angular from sniffing for the history API
   // since it's not supported in packaged apps.
@@ -209,10 +211,10 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
    */
   this.getVARecordId = function (username, password, callback) {
     var d = new Date();
-    var domainBase = "www.myhealth.va.gov/mhv-portal-web/mhv.portal";
+    var domainBase = "mhv-portal-web/mhv.portal";
     var domainInfo = "?_nfpb=true&_windowLabel=downloadData&downloadData_actionOverride=%2Fgov%2Fva%2Fmed%2Fmhv%2Fusermgmt%2FdownloadYourData%2FdownloadSelectionsReport&_pageLabel=downloadData&";
     var domainEnd = "downloadDatawlw-radio_button_group_key%3A%7BactionForm.pickDate%7D=downloadSelectedDateRanges&downloadDatawlw-select_key%3A%7BactionForm.fromDateMonth%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateMonth%7D=1&downloadDatawlw-select_key%3A%7BactionForm.fromDateDay%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateDay%7D=1&downloadDatawlw-select_key%3A%7BactionForm.fromDateYear%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.fromDateYear%7D=1895&downloadDatawlw-select_key%3A%7BactionForm.toDateMonth%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateMonth%7D=" + (d.getMonth() + 1) + "&downloadDatawlw-select_key%3A%7BactionForm.toDateDay%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateDay%7D=" + d.getDate() + "&downloadDatawlw-select_key%3A%7BactionForm.toDateYear%7DOldValue=true&downloadDatawlw-select_key%3A%7BactionForm.toDateYear%7D=" + d.getFullYear() + "&downloadDatawlw-radio_button_group_key%3A%7BactionForm.pickDataClasses%7D=downloadAllDataClasses&downloadDatawlw-checkbox_key%3A%7BactionForm.futureappointments%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.pastappointments%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.appointmentsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.appointmentsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.prescriptions%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medications%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.medsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vachemlabs%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vapathology%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.varadiology%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vaekg%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsandtests%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.labsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vaproblemlist%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vaadmissionsanddischarges%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vaprogressnotes%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.wellness%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.wellnesshistoryall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.wellnesshistoryall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vaallergies%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.seiallergies%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.allergiesall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.allergiesall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vaimmunizations%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizations%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizationsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.immunizationsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vavitals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadings%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadingsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.vitalsandreadingsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.medicalevents%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.familyhealthhistory%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.militaryhealthhistory%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.treatmentfacilities%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthcareproviders%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthhistoryall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthhistoryall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.activityjournal%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodjournal%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodactivityall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.foodactivityall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.currentgoals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.completedgoals%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.goalsall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.goalsall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.vademographics%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.seidemographics%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.healthinsurance%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.demohealthall%7DOldValue=false&downloadDatawlw-checkbox_key%3A%7BactionForm.demohealthall%7D=on&downloadDatawlw-checkbox_key%3A%7BactionForm.dodmilitaryservice%7DOldValue=false";
-    var domainUrl = "https://" + domainBase + domainInfo + domainEnd;
+    var domainUrl = baseDomain + domainBase + domainInfo + domainEnd;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     $http({
       method: 'POST',
@@ -239,9 +241,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       });
   };
   this.getVARecordASCII = function (recordId, username, password, callback) {
-    var domainBase = "www.myhealth.va.gov/mhv-portal-web/downloadData";
+    var domainBase = "mhv-portal-web/downloadData";
     var domainInfo = "?reportId=" + recordId + "&downloadFormat=textFormat";
-    var domainUrl = "https://" + domainBase + domainInfo;
+    var domainUrl = baseDomain + domainBase + domainInfo;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     $http({
       method: 'POST',
@@ -264,9 +266,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
       });
   };
   this.getVARecordPDF = function (recordId, username, password, filename, callback) {
-    var domainBase = "www.myhealth.va.gov/mhv-portal-web/downloadData";
+    var domainBase = "mhv-portal-web/downloadData";
     var domainInfo = "?reportId=" + recordId + "&downloadFormat=pdfFormat";
-    var domainUrl = "https://" + domainBase + domainInfo;
+    var domainUrl = baseDomain + domainBase + domainInfo;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     filename = filename.substring(0, filename.length - 4);
     filename += '.pdf';
@@ -291,9 +293,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   };
 
   this.getVARecordCCD = function (requestDate, username, password, filename, callback) {
-    var domainBase = "www.myhealth.va.gov/mhv-portal-web/downloadCCDData";
+    var domainBase = "mhv-portal-web/downloadCCDData";
     var domainInfo = "?downloadFormat=xml&requestDate=" + requestDate;
-    var domainUrl = "https://" + domainBase + domainInfo;
+    var domainUrl = baseDomain + domainBase + domainInfo;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     $http({
       method: 'POST',
@@ -316,9 +318,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   };
 
   this.getVARecordCCDPDF = function (requestDate, username, password, filename, callback) {
-    var domainBase = "www.myhealth.va.gov/mhv-portal-web/downloadCCDData";
+    var domainBase = "mhv-portal-web/downloadCCDData";
     var domainInfo = "?downloadFormat=pdf&requestDate=" + requestDate;
-    var domainUrl = "https://" + domainBase + domainInfo;
+    var domainUrl = baseDomain + domainBase + domainInfo;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     $http({
       method: 'POST',
@@ -341,9 +343,9 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
   };
 
   this.checkVAReportReady = function (username, password, callback) {
-    var domainBase = "www.myhealth.va.gov/mhv-portal-web/mhv.portal";
+    var domainBase = "mhv-portal-web/mhv.portal";
     var domainEnd = "?_nfpb=true&_windowLabel=downloadData&downloadData_actionOverride=%2Fgov%2Fva%2Fmed%2Fmhv%2Fusermgmt%2FdownloadYourData%2FdownloadReport&_pageLabel=downloadData&operation=downloadHealthHistoryData";
-    var domainUrl = "https://" + domainBase + domainEnd;
+    var domainUrl = baseDomain + domainBase + domainEnd;
     var authHeader = "Basic " + Base64.encode(username + ":" + password);
     $http({
       method: 'POST',
@@ -458,6 +460,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
     $scope.dreLoggedIn = false;
     $scope.manualFile = null;
     $scope.fileButtons = [];
+    clearInterval(checkInterval);
   };
 
   $scope.$on("fileSelected", function (event, args) {
@@ -578,6 +581,7 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
         dreBackend.getVARecordASCII(recordId, $scope.select.username, $scope.select.password, function (err, asciiFile) {
           if (err) {
             console.log(err);
+            addProgressAlert('Error in retrieving Txt Record');
           } else {
             $scope.progress = $scope.progress + 20;
             addProgressAlert('Retrieved Txt Record');
@@ -591,29 +595,27 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
             //$scope.asciiFile = asciiFile;
             //$scope.asciiFileName = asciiFile.name;
             //$scope.asciiUrl = (window.URL || window.webkitURL).createObjectURL(asciiFile);
+            dreBackend.getVARecordPDF(recordId, $scope.select.username, $scope.select.password, asciiFile.name, function (err, pdfFile) {
+              if (err) {
+                console.log(err);
+                addProgressAlert('Error in retrieving basic pdf');
+              } else {
+                $scope.progress = $scope.progress + 20;
+                addProgressAlert('Retrieved Basic PDF');
+                $scope.fileButtons.push({
+                  uploaded: false,
+                  filetype: 'pdf',
+                  file: pdfFile,
+                  filename: pdfFile.name,
+                  url: (window.URL || window.webkitURL).createObjectURL(pdfFile)
+                });
+                reportRetrieved = false;
+                checkInterval = setInterval(checkReport, 30 * 1000);
+                checkReport();
+              }
+            });
           }
-          dreBackend.getVARecordPDF(recordId, $scope.select.username, $scope.select.password, asciiFile.name, function (err, pdfFile) {
-            if (err) {
-              console.log(err);
-            } else {
-              $scope.progress = $scope.progress + 20;
-              addProgressAlert('Retrieved Basic PDF');
-              $scope.fileButtons.push({
-                uploaded: false,
-                filetype: 'pdf',
-                file: pdfFile,
-                filename: pdfFile.name,
-                url: (window.URL || window.webkitURL).createObjectURL(pdfFile)
-              });
-              //$scope.pdfFile = pdfFile;
-              //$scope.pdfFileName = pdfFile.name;
-              //$scope.pdfUrl = (window.URL || window.webkitURL).createObjectURL(pdfFile);
-            }
-          });
         });
-        reportRetrieved = false;
-        checkInterval = setInterval(checkReport, 30 * 1000);
-        checkReport();
       }
     });
   }
