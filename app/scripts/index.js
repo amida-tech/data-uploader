@@ -2,7 +2,8 @@
 
 "use strict";
 
-var baseDomain = 'http://localhost:3000/'; //https://www.myhealth.va.gov/
+var baseDomain = 'http://localhost:3000/';
+//var baseDomain = 'https://www.myhealth.va.gov/';
 
 var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($provide) {
   // Prevent Angular from sniffing for the history API
@@ -232,12 +233,20 @@ var dreChromeApp = angular.module('dreChromeApp', ['ui.bootstrap'], function ($p
         var recordId = re.exec(data);
         console.log(recordId);
         console.log(data);
-        callback(null, recordId[1]);
+        if (recordId) {
+          if (recordId[1]) {
+            callback(null, recordId[1]);
+          } else {
+            callback("no record id");
+          }
+        } else {
+          callback("no record id");
+        }
       }
     })
       .error(function (data) {
         console.log("was an error: ", data);
-        callback(data);
+        callback('Wrong username or password. Please RESET and try again.');
       });
   };
   this.getVARecordASCII = function (recordId, username, password, callback) {
